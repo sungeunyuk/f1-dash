@@ -54,6 +54,9 @@ services:
     build:
       context: .
       target: importer
+    depends_on:
+      - timescaledb
+    restart: unless-stopped
     environment:
       - DATABASE_URL=postgres://postgres:password@timescaledb:5432/postgres
 
