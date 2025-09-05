@@ -65,6 +65,9 @@ services:
     build:
       context: .
       target: analytics
+    depends_on:
+      timescaledb:
+        condition: service_healthy
     environment:
       - ORIGIN=http://localhost:3000
       - ANALYTICS_ADDRESS=0.0.0.0:4002
