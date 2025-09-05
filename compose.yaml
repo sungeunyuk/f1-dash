@@ -48,6 +48,11 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD=password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   importer:
     image: ghcr.io/slowlydev/f1-dash-importer:latest
@@ -55,7 +60,8 @@ services:
       context: .
       target: importer
     depends_on:
-      - timescaledb
+      timescaledb:
+        condition: service_healthy
     restart: unless-stopped
     environment:
       - DATABASE_URL=postgres://postgres:password@timescaledb:5432/postgres
